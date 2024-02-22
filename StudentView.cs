@@ -92,7 +92,7 @@ namespace BrockCafeCW
             OleDbDataReader dr, da;
 
             dbConnector.Connect();
-            string sql = $"SELECT Quantity FROM[Menu Items] WHERE(ItemName = '{(sender as Button).Tag.ToString()}')";
+            string sql = $"SELECT Quantity, Ordered FROM[Menu Items] WHERE(ItemName = '{(sender as Button).Tag.ToString()}')";
             da = dbConnector.DoSQL(sql);
             while (da.Read())
             {
@@ -103,8 +103,11 @@ namespace BrockCafeCW
                 else
                 {
                     int q = Convert.ToInt32(da[0]) - 1; 
+                    int p = Convert.ToInt32(da[1]) + 1; 
                     string SQL = $"UPDATE  [Menu Items] SET Quantity = {q} WHERE(ItemName = '{(sender as Button).Tag.ToString()}') ";
                     dbConnector.DoSQL(SQL);
+                    string SQLSTR = $"UPDATE  [Menu Items] SET Ordered = {p} WHERE(ItemName = '{(sender as Button).Tag.ToString()}') ";
+                    dbConnector.DoSQL(SQLSTR);
                     string SqlStr = $"SELECT ItemName, ItemCost,  menuItemID FROM[Menu Items] WHERE(ItemName = '{(sender as Button).Tag.ToString()}')";
 
                     dr = dbConnector.DoSQL(SqlStr);

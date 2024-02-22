@@ -69,6 +69,13 @@ namespace BrockCafeCW
 
             }
 
+            string SqlString = "SELECT ItemName FROM [Menu Items]";
+            OleDbDataAdapter da = new OleDbDataAdapter(SqlString, conn.ConnectionString);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "Menu Items");
+            cmbItem.DisplayMember = "ItemName";
+            cmbItem.ValueMember = "ItemName";
+            cmbItem.DataSource = ds.Tables["Menu Items"];
             dbConnector.Close();
         }
 
@@ -81,7 +88,7 @@ namespace BrockCafeCW
 
         private void btnRestockAll_Click(object sender, EventArgs e)
         {
-            int a;
+            
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
             dbConnector.Connect();
@@ -90,6 +97,18 @@ namespace BrockCafeCW
                string Sql = $"UPDATE  [Menu Items] SET Quantity = 50";
                 dbConnector.DoSQL(Sql);
                
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            clsDBConnector dbConnector = new clsDBConnector();
+            OleDbDataReader dr;
+            dbConnector.Connect();
+
+
+            string Sql = $"UPDATE  [Menu Items] SET Quantity = 50 WHERE ItemName = '{cmbItem.Text}' ";
+            dbConnector.DoSQL(Sql);
         }
     }
 }

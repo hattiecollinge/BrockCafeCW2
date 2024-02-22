@@ -47,6 +47,7 @@
             this.cmbStudentNum.Name = "cmbStudentNum";
             this.cmbStudentNum.Size = new System.Drawing.Size(92, 21);
             this.cmbStudentNum.TabIndex = 0;
+            this.cmbStudentNum.SelectedIndexChanged += new System.EventHandler(this.cmbStudentNum_SelectedIndexChanged);
             // 
             // txtPin
             // 

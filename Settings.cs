@@ -37,5 +37,12 @@ namespace BrockCafeCW
             frmStock stock = new frmStock();
             stock.Show();   
         }
+
+        private void btnStats_Click(object sender, EventArgs e)
+        {
+            Close();
+            frmStats stats = new frmStats();
+            stats.Show();   
+        }
     }
 }

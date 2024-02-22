@@ -32,6 +32,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.btnRestockAll = new System.Windows.Forms.Button();
             this.cmbItem = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // flpStock
@@ -57,7 +58,7 @@
             // btnRestockAll
             // 
             this.btnRestockAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnRestockAll.Location = new System.Drawing.Point(769, 522);
+            this.btnRestockAll.Location = new System.Drawing.Point(764, 252);
             this.btnRestockAll.Name = "btnRestockAll";
             this.btnRestockAll.Size = new System.Drawing.Size(91, 86);
             this.btnRestockAll.TabIndex = 7;
@@ -73,12 +74,24 @@
             this.cmbItem.Size = new System.Drawing.Size(121, 21);
             this.cmbItem.TabIndex = 8;
             // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.button2.Location = new System.Drawing.Point(764, 160);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(91, 86);
+            this.button2.TabIndex = 9;
+            this.button2.Text = "Restock Item";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // frmStock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MistyRose;
             this.ClientSize = new System.Drawing.Size(949, 645);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.cmbItem);
             this.Controls.Add(this.btnRestockAll);
             this.Controls.Add(this.button1);
@@ -96,5 +109,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnRestockAll;
         private System.Windows.Forms.ComboBox cmbItem;
+        private System.Windows.Forms.Button button2;
     }
 }

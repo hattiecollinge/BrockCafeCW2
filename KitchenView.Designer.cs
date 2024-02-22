@@ -33,6 +33,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnOrderView = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
+            this.btnLogOut = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // flpOrders
@@ -52,7 +53,7 @@
             // btnOrderView
             // 
             this.btnOrderView.Location = new System.Drawing.Point(850, 23);
-            this.btnOrderView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnOrderView.Margin = new System.Windows.Forms.Padding(2);
             this.btnOrderView.Name = "btnOrderView";
             this.btnOrderView.Size = new System.Drawing.Size(70, 46);
             this.btnOrderView.TabIndex = 1;
@@ -63,7 +64,7 @@
             // btnSettings
             // 
             this.btnSettings.Location = new System.Drawing.Point(850, 74);
-            this.btnSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(70, 46);
             this.btnSettings.TabIndex = 3;
@@ -71,12 +72,24 @@
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
+            // btnLogOut
+            // 
+            this.btnLogOut.Location = new System.Drawing.Point(850, 554);
+            this.btnLogOut.Margin = new System.Windows.Forms.Padding(2);
+            this.btnLogOut.Name = "btnLogOut";
+            this.btnLogOut.Size = new System.Drawing.Size(70, 46);
+            this.btnLogOut.TabIndex = 4;
+            this.btnLogOut.Text = "LOG OUT ";
+            this.btnLogOut.UseVisualStyleBackColor = true;
+            this.btnLogOut.Click += new System.EventHandler(this.btnLogOut_Click);
+            // 
             // KitchenView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MistyRose;
             this.ClientSize = new System.Drawing.Size(949, 645);
+            this.Controls.Add(this.btnLogOut);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnOrderView);
             this.Controls.Add(this.flpOrders);
@@ -93,5 +106,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnOrderView;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnLogOut;
     }
 }

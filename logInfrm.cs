@@ -132,5 +132,10 @@ namespace BrockCafeCW
             forgot.Show();  
             
         }
+
+        private void cmbStudentNum_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

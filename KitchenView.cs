@@ -110,5 +110,12 @@ namespace BrockCafeCW
             Close();
             settings.Show();
         }
+
+        private void btnLogOut_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            logInfrm login = new logInfrm();
+            login.Show();
+        }
     }
 }

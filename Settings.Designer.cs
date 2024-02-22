@@ -39,7 +39,7 @@
             // 
             this.btnPreviousOrders.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.btnPreviousOrders.Location = new System.Drawing.Point(43, 60);
-            this.btnPreviousOrders.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnPreviousOrders.Margin = new System.Windows.Forms.Padding(2);
             this.btnPreviousOrders.Name = "btnPreviousOrders";
             this.btnPreviousOrders.Size = new System.Drawing.Size(420, 284);
             this.btnPreviousOrders.TabIndex = 0;
@@ -51,7 +51,7 @@
             // 
             this.btnAddStudent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.btnAddStudent.Location = new System.Drawing.Point(43, 348);
-            this.btnAddStudent.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAddStudent.Margin = new System.Windows.Forms.Padding(2);
             this.btnAddStudent.Name = "btnAddStudent";
             this.btnAddStudent.Size = new System.Drawing.Size(420, 284);
             this.btnAddStudent.TabIndex = 1;
@@ -62,18 +62,19 @@
             // 
             this.btnStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.btnStats.Location = new System.Drawing.Point(481, 348);
-            this.btnStats.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStats.Margin = new System.Windows.Forms.Padding(2);
             this.btnStats.Name = "btnStats";
             this.btnStats.Size = new System.Drawing.Size(420, 284);
             this.btnStats.TabIndex = 2;
             this.btnStats.Text = "Stats";
             this.btnStats.UseVisualStyleBackColor = false;
+            this.btnStats.Click += new System.EventHandler(this.btnStats_Click);
             // 
             // btnStockControl
             // 
             this.btnStockControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.btnStockControl.Location = new System.Drawing.Point(481, 60);
-            this.btnStockControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStockControl.Margin = new System.Windows.Forms.Padding(2);
             this.btnStockControl.Name = "btnStockControl";
             this.btnStockControl.Size = new System.Drawing.Size(420, 284);
             this.btnStockControl.TabIndex = 3;
@@ -105,7 +106,7 @@
             this.Controls.Add(this.btnStats);
             this.Controls.Add(this.btnAddStudent);
             this.Controls.Add(this.btnPreviousOrders);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Settings";
             this.Text = "Settings";
             this.ResumeLayout(false);
