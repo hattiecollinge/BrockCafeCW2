@@ -16,8 +16,7 @@ namespace BrockCafeCW
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmStats());
+            Application.Run(new logInfrm());
         }
     }
 }
-//WHEN ORDER IS COMPLETED ADD TO FLOW LAYOUT PANEL THEN DELETE WHEN ITEM IS COLLECTED 

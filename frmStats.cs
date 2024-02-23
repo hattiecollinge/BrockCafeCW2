@@ -28,48 +28,30 @@ namespace BrockCafeCW
 
         private void frmStats_Load(object sender, EventArgs e)
         {
-            var dataSource = new List<Charts>();
-            dataSource.Add(new Charts() { Name = "Most Items Ordered" });
-            dataSource.Add(new Charts() { Name = "Least Items Ordered" });
-            dataSource.Add(new Charts() { Name = "3" });
-            this.comboBox1.DataSource = dataSource;
-            this.comboBox1.DisplayMember = "Name";
+           
 
-            this.comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            if (comboBox1.Text == "Most Items Ordered")
-            {
-                flpChart.Controls.Clear();
-                TopOrderedChart();
-            }
-            else  if (comboBox1.Text == "Least Items Ordered")
-            {
-                flpChart.Controls.Clear();
-                LeastOrderedChart();
-            }
         }
 
         private void LeastOrderedChart()
         {
-            Chart chart2 = new Chart();
+            chart1.Series.Clear();
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
             dbConnector.Connect();
-            string SQL = $"SELECT  top 10 Ordered, ItemName FROM[Menu Items] ORDER BY Ordered DESC ";
+            string SQL = $"SELECT  top 10 Ordered, ItemName FROM[Menu Items] ORDER BY Ordered ASC ";
             dr = dbConnector.DoSQL(SQL);
+            chart1.Series.Add("ItemsOrdered");
             while (dr.Read())
             {
                 string desc = dr[1].ToString();
-   
-                chart2.Series["ItemsOrdered"].Points.AddXY(desc, Convert.ToDouble(dr[0].ToString()));
+                chart1.Series["ItemsOrdered"].Points.AddXY(desc, Convert.ToDouble(dr[0].ToString()));
 
-            flpChart.Controls.Add(chart2);
             }
         }
 
         private void TopOrderedChart()
         {
-            Chart chart1 = new Chart();
+            chart1.Series.Clear();
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
             dbConnector.Connect();
@@ -82,13 +64,41 @@ namespace BrockCafeCW
                 chart1.Series["ItemsOrdered"].Points.AddXY(desc, Convert.ToDouble(dr[0].ToString()));
 
             }
-            flpChart.Controls.Add(chart1);  
+
         }
 
         private void chart1_Click(object sender, EventArgs e)
         {
 
 
+        }
+
+        private void chart1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        private void btnMostOrdered_Click(object sender, EventArgs e)
+        {
+            TopOrderedChart();
+        }
+
+        private void btnLeastOrdered_Click(object sender, EventArgs e)
+        {
+            LeastOrderedChart();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+            Settings kitchen = new Settings();
+            kitchen.Show();
         }
     }
 }
