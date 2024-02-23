@@ -16,7 +16,7 @@ namespace BrockCafeCW
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new logInfrm());
+            Application.Run(new frmStats());
         }
     }
 }
