@@ -23,14 +23,14 @@ namespace BrockCafeCW
         string temperature;
         string Wind;
         string humidity;
-       public logInfrm()
+        public logInfrm()
         {
             InitializeComponent();
         }
 
         private void logInfrm_Load(object sender, EventArgs e)
         {
-            GetWeatherData("United Kingdom");
+            GetWeatherData("Hampshire");
             OleDbConnection conn = new OleDbConnection();
             string dbProvider;
             string dbSource;
@@ -50,20 +50,28 @@ namespace BrockCafeCW
         private void button1_Click(object sender, EventArgs e)
         {
 
-
+            ValidateStudentNum(cmbStudentNum.Text);
 
             string plainText = txtPin.Text;
             string hashedText = GetHashSHA256(plainText);
-
+            string sql;
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
             OleDbDataReader da;
             OleDbDataReader ds;
             dbConnector.Connect();
-            string sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
+           
+            string SQLS = "SELECT StudentID FROM Student";
+            dr = dbConnector.DoSQL(SQLS);
+
+
+            sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
             dr = dbConnector.DoSQL(sql);
+            
+            
             while (dr.Read())
             {
+
                 string studentnum = dr[0].ToString();
                 StudentView.studentID = Convert.ToInt32(studentnum);
                 string sqlStr = $"SELECT StudentID, PinNum FROM LogIn WHERE(StudentID = {studentnum})";
@@ -103,6 +111,24 @@ namespace BrockCafeCW
                     }
                 }
             }
+
+
+        }
+
+        private void ValidateStudentNum(string studentNum)
+        {
+            int number;
+            if (int.TryParse(studentNum, out number) == false)
+            {
+                MessageBox.Show("Invalid Student ID");
+                return ;
+            }
+            if (studentNum == "")
+            {
+                MessageBox.Show("You have not entered anything");
+                return ;
+            }
+
         }
 
         private void txtPin_TextChanged(object sender, EventArgs e)
@@ -128,7 +154,7 @@ namespace BrockCafeCW
 
         private void btncreatePassword_Click(object sender, EventArgs e)
         {
-
+            Hide();
             frmCreatePin frmCreatePin = new frmCreatePin();
             frmCreatePin.Show();
         }
@@ -136,8 +162,6 @@ namespace BrockCafeCW
         private void button2_Click(object sender, EventArgs e)
         {
 
-            frmForgotPassword forgot = new frmForgotPassword();
-            forgot.Show();
 
         }
 
@@ -169,9 +193,9 @@ namespace BrockCafeCW
 
         private void DisplayData()
         {
-            lbl1.Text = "Temp: " + temperature;
-            lbl2.Text = "Wind: " + Wind;
-            lbl3.Text = "Humidity: " + humidity;
+            lbl1.Text = weather;
+            lbl2.Text = "Temp: " + humidity;
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -182,6 +206,13 @@ namespace BrockCafeCW
         private void label4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            Hide();
+            frmForgotPassword forgot = new frmForgotPassword();
+            forgot.Show();
         }
     }
 }

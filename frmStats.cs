@@ -45,7 +45,8 @@ namespace BrockCafeCW
             {
                 string desc = dr[1].ToString();
                 chart1.Series["ItemsOrdered"].Points.AddXY(desc, Convert.ToDouble(dr[0].ToString()));
-
+                chart1.ChartAreas[0].AxisX.LabelStyle.Angle = -90;
+                chart1.ChartAreas[0].AxisX.LabelStyle.Interval = 1;
             }
         }
 
@@ -62,7 +63,8 @@ namespace BrockCafeCW
             {
                 string desc = dr[1].ToString();
                 chart1.Series["ItemsOrdered"].Points.AddXY(desc, Convert.ToDouble(dr[0].ToString()));
-
+                chart1.ChartAreas[0].AxisX.LabelStyle.Angle = -90;
+                chart1.ChartAreas[0].AxisX.LabelStyle.Interval = 1;
             }
 
         }

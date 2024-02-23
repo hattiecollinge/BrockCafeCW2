@@ -127,5 +127,12 @@ namespace BrockCafeCW
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+            logInfrm kitchen = new logInfrm();
+            kitchen.Show();
+        }
     }
 }

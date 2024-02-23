@@ -84,7 +84,9 @@ namespace BrockCafeCW
                     }
                 }
             }
-            this.Close();
+            Close();
+            logInfrm login = new logInfrm();
+            login.Show();
             dbConnector.Close();
         }
         private bool ValidatePassword(string plainText)

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.btnPreviousOrders = new System.Windows.Forms.Button();
-            this.btnAddStudent = new System.Windows.Forms.Button();
             this.btnStats = new System.Windows.Forms.Button();
             this.btnStockControl = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -47,21 +46,10 @@
             this.btnPreviousOrders.UseVisualStyleBackColor = false;
             this.btnPreviousOrders.Click += new System.EventHandler(this.btnPreviousOrders_Click);
             // 
-            // btnAddStudent
-            // 
-            this.btnAddStudent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnAddStudent.Location = new System.Drawing.Point(43, 348);
-            this.btnAddStudent.Margin = new System.Windows.Forms.Padding(2);
-            this.btnAddStudent.Name = "btnAddStudent";
-            this.btnAddStudent.Size = new System.Drawing.Size(420, 284);
-            this.btnAddStudent.TabIndex = 1;
-            this.btnAddStudent.Text = "Add Student ";
-            this.btnAddStudent.UseVisualStyleBackColor = false;
-            // 
             // btnStats
             // 
             this.btnStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnStats.Location = new System.Drawing.Point(481, 348);
+            this.btnStats.Location = new System.Drawing.Point(251, 348);
             this.btnStats.Margin = new System.Windows.Forms.Padding(2);
             this.btnStats.Name = "btnStats";
             this.btnStats.Size = new System.Drawing.Size(420, 284);
@@ -104,7 +92,6 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnStockControl);
             this.Controls.Add(this.btnStats);
-            this.Controls.Add(this.btnAddStudent);
             this.Controls.Add(this.btnPreviousOrders);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Settings";
@@ -116,7 +103,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnPreviousOrders;
-        private System.Windows.Forms.Button btnAddStudent;
         private System.Windows.Forms.Button btnStats;
         private System.Windows.Forms.Button btnStockControl;
         private System.Windows.Forms.Button button1;

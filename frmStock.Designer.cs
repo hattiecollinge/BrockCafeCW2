@@ -68,6 +68,8 @@
             // 
             // cmbItem
             // 
+            this.cmbItem.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cmbItem.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbItem.FormattingEnabled = true;
             this.cmbItem.Location = new System.Drawing.Point(751, 128);
             this.cmbItem.Name = "cmbItem";
