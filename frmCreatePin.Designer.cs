@@ -57,7 +57,7 @@
             // 
             // btnEnter
             // 
-            this.btnEnter.Location = new System.Drawing.Point(393, 396);
+            this.btnEnter.Location = new System.Drawing.Point(491, 425);
             this.btnEnter.Margin = new System.Windows.Forms.Padding(2);
             this.btnEnter.Name = "btnEnter";
             this.btnEnter.Size = new System.Drawing.Size(56, 19);
