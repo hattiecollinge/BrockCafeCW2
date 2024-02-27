@@ -13,6 +13,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using RestSharp;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Data.SqlClient;
 
 namespace BrockCafeCW
 {
@@ -49,86 +50,100 @@ namespace BrockCafeCW
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            ValidateStudentNum(cmbStudentNum.Text);
-
-            string plainText = txtPin.Text;
-            string hashedText = GetHashSHA256(plainText);
-            string sql;
-            clsDBConnector dbConnector = new clsDBConnector();
-            OleDbDataReader dr;
-            OleDbDataReader da;
-            OleDbDataReader ds;
-            dbConnector.Connect();
-           
-            string SQLS = "SELECT StudentID FROM Student";
-            dr = dbConnector.DoSQL(SQLS);
-
-
-            sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
-            dr = dbConnector.DoSQL(sql);
-            
-            
-            while (dr.Read())
+            bool valid = false;
+            if (ValidateStudentNum(cmbStudentNum.Text))
+            {
+                valid = true;
+            }
+            while (valid == true)
             {
 
-                string studentnum = dr[0].ToString();
-                StudentView.studentID = Convert.ToInt32(studentnum);
-                string sqlStr = $"SELECT StudentID, PinNum FROM LogIn WHERE(StudentID = {studentnum})";
-                da = dbConnector.DoSQL(sqlStr);
-                while (da.Read())
+                string plainText = txtPin.Text;
+                string hashedText = GetHashSHA256(plainText);
+                string sql;
+                clsDBConnector dbConnector = new clsDBConnector();
+                OleDbDataReader dr;
+                OleDbDataReader da;
+                OleDbDataReader ds;
+                dbConnector.Connect();
+
+                string SQLS = "SELECT StudentID FROM Student";
+                dr = dbConnector.DoSQL(SQLS);
+
+
+                sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
+                dr = dbConnector.DoSQL(sql);
+
+
+                while (dr.Read())
                 {
-                    if (hashedText == da[1].ToString())
+
+                    string studentnum = dr[0].ToString();
+                    StudentView.studentID = Convert.ToInt32(studentnum);
+                    string sqlStr = $"SELECT StudentID, PinNum FROM LogIn WHERE(StudentID = {studentnum})";
+                    da = dbConnector.DoSQL(sqlStr);
+                    while (da.Read())
                     {
-
-
-
-                        string SQL = $"SELECT Status FROM Status WHERE(PersonID = {studentnum})";
-                        ds = dbConnector.DoSQL(SQL);
-                        while (ds.Read())
+                        if (hashedText == da[1].ToString())
                         {
-                            if (ds[0].ToString() == "Staff")
-                            {
-                                Hide();
-                                KitchenView kitchen = new KitchenView();
+                            valid = false;
 
-                                kitchen.Show();
-                            }
-                            else
-                            {
-                                Hide();
-                                StudentView studentview = new StudentView();
-                                studentview.Show();
 
+                            string SQL = $"SELECT Status FROM Status WHERE(PersonID = {studentnum})";
+                            ds = dbConnector.DoSQL(SQL);
+                            while (ds.Read())
+                            {
+                                if (ds[0].ToString() == "Staff")
+                                {
+                                    Hide();
+                                    KitchenView kitchen = new KitchenView();
+
+                                    kitchen.Show();
+                                }
+                                else
+                                {
+                                    Hide();
+                                    StudentView studentview = new StudentView();
+                                    studentview.Show();
+
+                                }
                             }
+
+
                         }
-
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("wrong, try again!");
+                        else
+                        {
+                            MessageBox.Show("wrong, try again!");
+                        }
                     }
                 }
-            }
 
+            }
 
         }
 
-        private void ValidateStudentNum(string studentNum)
+        private bool ValidateStudentNum(string studentNum)
         {
+          
+ 
+
             int number;
             if (int.TryParse(studentNum, out number) == false)
             {
                 MessageBox.Show("Invalid Student ID");
-                return ;
+                return false;
             }
             if (studentNum == "")
             {
                 MessageBox.Show("You have not entered anything");
-                return ;
+                return false;
             }
+            
 
+            else
+            {
+                return true;
+            }
         }
 
         private void txtPin_TextChanged(object sender, EventArgs e)
@@ -171,7 +186,7 @@ namespace BrockCafeCW
         }
         private void GetWeatherData(string location)
         {
-            var client = new RestClient($"https://wttr.in/{WebUtility.UrlEncode(location)}?format=%c+%t+$w+%h");
+            var client = new RestClient($"https://wttr.in/{WebUtility.UrlEncode(location)}?format=%t+%c");
             var request = new RestRequest();
             request.AddParameter("method", "GET");
             var response = client.Execute(request);
@@ -179,10 +194,9 @@ namespace BrockCafeCW
             if (response.IsSuccessful)
             {
                 string[] weatherParameter = Regex.Split(response.Content, " ");
-                weather = weatherParameter[0];
-                temperature = weatherParameter[1];
-                Wind = weatherParameter[2];
-                humidity = weatherParameter[3];
+                weather = weatherParameter[1];
+                temperature = weatherParameter[0];
+
                 DisplayData();
             }
             else
@@ -194,7 +208,7 @@ namespace BrockCafeCW
         private void DisplayData()
         {
             lbl1.Text = weather;
-            lbl2.Text = "Temp: " + humidity;
+            lbl2.Text = "Temp: " + temperature;
 
         }
 
