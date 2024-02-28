@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using RestSharp;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Data.SqlClient;
+using System.Threading;
 
 namespace BrockCafeCW
 {
@@ -22,8 +23,7 @@ namespace BrockCafeCW
     {
         string weather;
         string temperature;
-        string Wind;
-        string humidity;
+
         public logInfrm()
         {
             InitializeComponent();
@@ -114,6 +114,7 @@ namespace BrockCafeCW
                         else
                         {
                             MessageBox.Show("wrong, try again!");
+                            valid = false;
                         }
                     }
                 }
@@ -124,26 +125,52 @@ namespace BrockCafeCW
 
         private bool ValidateStudentNum(string studentNum)
         {
-          
- 
+
+
 
             int number;
+
+            int count = 0;
+            bool valid = true;
+
+            string sql = $"SELECT StudentNumber FROM   Student";
+            clsDBConnector dbConnector = new clsDBConnector();
+            OleDbDataReader dr; 
+            dbConnector.Connect();
+            dr = dbConnector.DoSQL(sql);
+            
+            while (dr.Read())
+            {
+                if (studentNum == dr[0].ToString())
+                {
+                    count++;
+                }
+            }
+            if (count == 0)
+            {
+                MessageBox.Show("Invalid Student ID");
+                valid = false;
+            }
+            else if (count >0)
+            {
+                valid = true;
+            }
             if (int.TryParse(studentNum, out number) == false)
             {
                 MessageBox.Show("Invalid Student ID");
-                return false;
+                valid = false;
+               
             }
             if (studentNum == "")
             {
+                valid = false;
                 MessageBox.Show("You have not entered anything");
-                return false;
+               
             }
-            
 
-            else
-            {
-                return true;
-            }
+
+            return valid;
+
         }
 
         private void txtPin_TextChanged(object sender, EventArgs e)

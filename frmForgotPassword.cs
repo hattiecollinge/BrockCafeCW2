@@ -40,54 +40,111 @@ namespace BrockCafeCW
 
         private void btnEnter_Click(object sender, EventArgs e)
         {
+            bool valid = false;
+            if (ValidateStudentNum(cmbStudentNum.Text))
+            {
+                valid = true;
+            }
+            while (valid == true)
+            {
+                clsDBConnector dbConnector = new clsDBConnector();
+                OleDbDataReader dr;
+                OleDbDataReader da;
+                OleDbDataReader ds;
+                dbConnector.Connect();
+                string plainText = txtPinNum.Text;
+                string hashedText = GetHashSHA256(plainText);
+                int count = 0;
+                string sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
+                dr = dbConnector.DoSQL(sql);
+                while (dr.Read())
+                {
+                    int ID = Convert.ToInt32(dr[0]);
+                    string sqlstr = "SELECT StudentID FROM LogIn";
+                    ds = dbConnector.DoSQL(sqlstr);
+                    while (ds.Read())
+                    {
+                        if (ds[0].ToString() == dr[0].ToString())
+                        {
+
+                            count++;
+                        }
+                    }
+                    if (count == 0)
+                    {
+                        if (ValidatePassword(plainText))
+                        {
+
+                            string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
+                            da = dbConnector.DoSQL(Sql);
+                        }
+                    }
+                    else
+                    {
+                        string sqlStr = $"DELETE FROM LogIn WHERE(StudentID = {ID})";
+                        da = dbConnector.DoSQL(sqlStr);
+                        if (ValidatePassword(plainText))
+                        {
+
+                            string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
+                            da = dbConnector.DoSQL(Sql);
+                        }
+                    }
+                }
+                Close();
+                logInfrm login = new logInfrm();
+                login.Show();
+                dbConnector.Close();
+            }
+        }
+        private bool ValidateStudentNum(string studentNum)
+        {
+
+
+
+            int number;
+
+            int count = 0;
+            bool valid = true;
+
+            string sql = $"SELECT StudentNumber FROM   Student";
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
-            OleDbDataReader da;
-            OleDbDataReader ds;
             dbConnector.Connect();
-            string plainText = txtPinNum.Text;
-            string hashedText = GetHashSHA256(plainText);
-            int count = 0;
-            string sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
             dr = dbConnector.DoSQL(sql);
+
             while (dr.Read())
             {
-                int ID = Convert.ToInt32(dr[0]);
-                string sqlstr = "SELECT StudentID FROM LogIn";
-                ds = dbConnector.DoSQL(sqlstr);
-                while (ds.Read())
+                if (studentNum == dr[0].ToString())
                 {
-                    if (ds[0].ToString() == dr[0].ToString())
-                    {
-
-                        count++;
-                    }
-                }
-                if (count == 0)
-                {
-                    if (ValidatePassword(plainText))
-                    {
-
-                        string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
-                        da = dbConnector.DoSQL(Sql);
-                    }
-                }
-                else
-                {
-                    string sqlStr = $"DELETE FROM LogIn WHERE(StudentID = {ID})";
-                    da = dbConnector.DoSQL(sqlStr);
-                    if (ValidatePassword(plainText))
-                    {
-
-                    string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
-                    da = dbConnector.DoSQL(Sql);
-                    }
+                    count++;
                 }
             }
-            Close();
-            logInfrm login = new logInfrm();
-            login.Show();
-            dbConnector.Close();
+            if (count == 0)
+            {
+                MessageBox.Show("Invalid Student ID");
+                valid = false;
+            }
+            else if (count > 0)
+            {
+                valid = true;
+            }
+            if (int.TryParse(studentNum, out number) == false)
+            {
+                MessageBox.Show("Invalid Student ID");
+                valid = false;
+
+            }
+            if (studentNum == "")
+            {
+                valid = false;
+                MessageBox.Show("You have not entered anything");
+
+            }
+
+
+            return valid;
+
         }
         private bool ValidatePassword(string plainText)
         {
