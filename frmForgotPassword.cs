@@ -47,6 +47,7 @@ namespace BrockCafeCW
             }
             while (valid == true)
             {
+
                 clsDBConnector dbConnector = new clsDBConnector();
                 OleDbDataReader dr;
                 OleDbDataReader da;
@@ -95,24 +96,20 @@ namespace BrockCafeCW
                 logInfrm login = new logInfrm();
                 login.Show();
                 dbConnector.Close();
+                valid = false;
             }
         }
         private bool ValidateStudentNum(string studentNum)
         {
-
-
-
             int number;
-
             int count = 0;
             bool valid = true;
-
-            string sql = $"SELECT StudentNumber FROM   Student";
+            string sql = $"SELECT StudentNumber FROM Student";
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
+
             dbConnector.Connect();
             dr = dbConnector.DoSQL(sql);
-
             while (dr.Read())
             {
                 if (studentNum == dr[0].ToString())
@@ -133,18 +130,15 @@ namespace BrockCafeCW
             {
                 MessageBox.Show("Invalid Student ID");
                 valid = false;
-
             }
             if (studentNum == "")
             {
-                valid = false;
                 MessageBox.Show("You have not entered anything");
-
+                valid = false;
             }
 
 
             return valid;
-
         }
         private bool ValidatePassword(string plainText)
         {

@@ -52,46 +52,89 @@ namespace BrockCafeCW
             }
             while (valid == true)
             {
-                clsDBConnector dbConnector = new clsDBConnector();
-                OleDbDataReader dr;
-                OleDbDataReader da;
-                OleDbDataReader ds;
-                dbConnector.Connect();
-                string plainText = txtPin.Text;
-                string hashedText = GetHashSHA256(plainText);
-                int count = 0;
-                string sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
-                dr = dbConnector.DoSQL(sql);
-                while (dr.Read())
+
+            clsDBConnector dbConnector = new clsDBConnector();
+            OleDbDataReader dr;
+            OleDbDataReader da;
+            OleDbDataReader ds;
+            dbConnector.Connect();
+            string plainText = txtPin.Text;
+            string hashedText = GetHashSHA256(plainText);
+            int count = 0;
+            string sql = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
+            dr = dbConnector.DoSQL(sql);
+            while (dr.Read())
+            {
+                int ID = Convert.ToInt32(dr[0]);
+                string sqlstr = "SELECT StudentID FROM LogIn";
+                ds = dbConnector.DoSQL(sqlstr);
+                while (ds.Read())
                 {
-                    int ID = Convert.ToInt32(dr[0]);
-                    string sqlstr = "SELECT StudentID FROM LogIn";
-                    ds = dbConnector.DoSQL(sqlstr);
-                    while (ds.Read())
+                    if (ds[0].ToString() == dr[0].ToString())
                     {
-                        if (ds[0].ToString() == dr[0].ToString())
-                        {
-                            MessageBox.Show("You Already Have A Password!");
-                            count++;
-                            break;
-                        }
-                    }
-                    if (count < 1)
-                    {
-
-                        if (ValidatePassword(txtPin.Text))
-                        {
-
-                            string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
-                            da = dbConnector.DoSQL(Sql);
-                            this.Close();
-                        }
-
-
+                        MessageBox.Show("You Already Have A Password!");
+                        count++;
+                        break;
                     }
                 }
-            dbConnector.Close();
+                if (count < 1)
+                {
+                   if (ValidatePassword(txtPin.Text))
+                    {
+
+                        string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
+                        da = dbConnector.DoSQL(Sql);
+                        this.Close();
+                    }
+
+
+                }
             }
+            dbConnector.Close();
+                valid = false;
+            }
+        }
+
+        private bool ValidateStudentNum(string studentNum)
+        {
+            int number;
+            int count = 0;
+            bool valid = true;
+            string sql = $"SELECT StudentNumber FROM Student";
+            clsDBConnector dbConnector = new clsDBConnector();
+            OleDbDataReader dr;
+
+            dbConnector.Connect();
+            dr = dbConnector.DoSQL(sql);
+            while (dr.Read())
+            {
+                if (studentNum == dr[0].ToString())
+                {
+                    count++;
+                }
+            }
+            if (count == 0)
+            {
+                MessageBox.Show("Invalid Student ID");
+                valid = false;
+            }
+            else if (count > 0)
+            {
+                valid = true;
+            }
+            if (int.TryParse(studentNum, out number) == false)
+            {
+                MessageBox.Show("Invalid Student ID");
+                valid = false;
+            }
+            if (studentNum == "")
+            {
+                MessageBox.Show("You have not entered anything");
+                valid = false;
+            }
+
+
+            return valid;
         }
 
         private bool ValidatePassword(string plainText)
@@ -143,53 +186,9 @@ namespace BrockCafeCW
             logInfrm kitchen = new logInfrm();
             kitchen.Show();
         }
-        private bool ValidateStudentNum(string studentNum)
+
+        private void cmbStudentNum_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-
-
-            int number;
-
-            int count = 0;
-            bool valid = true;
-
-            string sql = $"SELECT StudentNumber FROM   Student";
-            clsDBConnector dbConnector = new clsDBConnector();
-            OleDbDataReader dr;
-            dbConnector.Connect();
-            dr = dbConnector.DoSQL(sql);
-
-            while (dr.Read())
-            {
-                if (studentNum == dr[0].ToString())
-                {
-                    count++;
-                }
-            }
-            if (count == 0)
-            {
-                MessageBox.Show("Invalid Student ID");
-                valid = false;
-            }
-            else if (count > 0)
-            {
-                valid = true;
-            }
-            if (int.TryParse(studentNum, out number) == false)
-            {
-                MessageBox.Show("Invalid Student ID");
-                valid = false;
-
-            }
-            if (studentNum == "")
-            {
-                valid = false;
-                MessageBox.Show("You have not entered anything");
-
-            }
-
-
-            return valid;
 
         }
     }
