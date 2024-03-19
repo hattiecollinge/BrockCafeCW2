@@ -15,6 +15,7 @@ using RestSharp;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Data.SqlClient;
 using System.Windows.Forms.DataVisualization.Charting;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace BrockCafeCW
 {
@@ -67,7 +68,33 @@ namespace BrockCafeCW
                 OleDbDataReader da;
                 OleDbDataReader ds;
                 dbConnector.Connect();
+                int count = 0;
+                string sql1 = $"SELECT StudentID FROM Student WHERE(StudentNumber = {cmbStudentNum.Text})";
+                da = dbConnector.DoSQL(sql1);
+                while (da.Read())
+                {
+                    string sqlstr = "SELECT StudentID FROM LogIn";
 
+                    ds = dbConnector.DoSQL(sqlstr);
+
+
+                    while (ds.Read())
+                    {
+                        if (ds[0].ToString() == da[0].ToString())
+                        {
+                            count++;
+
+                            break;
+                        }
+                    }
+
+                }
+                if (count < 1)
+                {
+                    MessageBox.Show("You don't have a password yet!");
+                    valid = false;
+                    break;
+                }
                 string SQLS = "SELECT StudentID FROM Student";
                 dr = dbConnector.DoSQL(SQLS);
 
@@ -126,8 +153,8 @@ namespace BrockCafeCW
 
         private bool ValidateStudentNum(string studentNum)
         {
-          
- 
+
+
 
             int number;
             int count = 0;
@@ -135,44 +162,53 @@ namespace BrockCafeCW
             bool valid = true;
             string sql = $"SELECT StudentNumber FROM Student";
             clsDBConnector dbConnector = new clsDBConnector();
-            OleDbDataReader dr, ds;
-           
+            OleDbDataReader dr, ds, da;
+
             dbConnector.Connect();
             dr = dbConnector.DoSQL(sql);
+
             while (dr.Read())
             {
                 if (studentNum == dr[0].ToString())
                 {
                     count++;
                 }
-                int ID = Convert.ToInt32(dr[0]);
-                string sqlstr = "SELECT StudentID FROM LogIn";
-                ds = dbConnector.DoSQL(sqlstr);
-                while (ds.Read())
-                {
-                    if (ds[0].ToString() == dr[0].ToString())
-                    {
-                        
-                        c++;
-                        break;
-                    }
-            if (c == 0)
-            {
-                MessageBox.Show("You don't have a password yet!");
-                valid = false;
-                
             }
-                }
 
-            }
+            //string sql1 = $"SELECT StudentID FROM Student WHERE(StudentNumber = {studentNum})";
+            //da = dbConnector.DoSQL(sql1);
+            //while (da.Read())
+            //{
+            //    string sqlstr = "SELECT StudentID FROM LogIn";
+
+            //    ds = dbConnector.DoSQL(sqlstr);
+
+
+            //    while (ds.Read())
+            //    {
+            //        if (ds[0].ToString() == da[0].ToString())
+            //        {
+            //            c++;
+                       
+            //            break;
+            //        }
+            //    }
+
+            //}
+            //if (c < 1)
+            //{
+            //    MessageBox.Show("You don't have a password yet!");
+            //    valid = false;
+
+            //}
             if (count == 0)
             {
                 MessageBox.Show("Invalid Student ID");
-                valid=false;
+                valid = false;
             }
             else if (count > 0)
             {
-                valid = true;   
+                valid = true;
             }
             if (int.TryParse(studentNum, out number) == false)
             {
