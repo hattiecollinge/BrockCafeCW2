@@ -99,6 +99,7 @@ namespace BrockCafeCW
                 valid = false;
             }
         }
+        
         private bool ValidateStudentNum(string studentNum)
         {
             int number;

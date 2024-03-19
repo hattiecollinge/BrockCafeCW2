@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using RestSharp;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Data.SqlClient;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace BrockCafeCW
 {
@@ -130,10 +131,11 @@ namespace BrockCafeCW
 
             int number;
             int count = 0;
+            int c = 0;
             bool valid = true;
             string sql = $"SELECT StudentNumber FROM Student";
             clsDBConnector dbConnector = new clsDBConnector();
-            OleDbDataReader dr;
+            OleDbDataReader dr, ds;
            
             dbConnector.Connect();
             dr = dbConnector.DoSQL(sql);
@@ -143,6 +145,25 @@ namespace BrockCafeCW
                 {
                     count++;
                 }
+                int ID = Convert.ToInt32(dr[0]);
+                string sqlstr = "SELECT StudentID FROM LogIn";
+                ds = dbConnector.DoSQL(sqlstr);
+                while (ds.Read())
+                {
+                    if (ds[0].ToString() == dr[0].ToString())
+                    {
+                        
+                        c++;
+                        break;
+                    }
+            if (c == 0)
+            {
+                MessageBox.Show("You don't have a password yet!");
+                valid = false;
+                
+            }
+                }
+
             }
             if (count == 0)
             {
