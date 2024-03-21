@@ -84,8 +84,9 @@ namespace BrockCafeCW
 
                         string Sql = $"INSERT INTO LogIn (StudentID, PinNum) VALUES({ID}, '{hashedText}')";
                         da = dbConnector.DoSQL(Sql);
-                        this.Close();
-                    }
+                            logInfrm kitchen = new logInfrm();
+                            kitchen.Show();
+                        }
 
 
                 }

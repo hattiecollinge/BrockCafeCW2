@@ -8,13 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Printing;
+
 
 namespace BrockCafeCW
 {
     public partial class StudentView : Form
     {
+        // Declare a string to hold the entire document contents.
+        private string documentContents;
+        // Declare a variable to hold the portion of the document that
+        // is not printed.
+        private string stringToPrint;
+        private string header; // this will appear at the top of each page
 
         public static int studentID { get; internal set; }
+        public static int OrderID { get; internal set; }
 
         public StudentView()
         {
@@ -102,8 +111,8 @@ namespace BrockCafeCW
                 }
                 else
                 {
-                    int q = Convert.ToInt32(da[0]) - 1; 
-                    int p = Convert.ToInt32(da[1]) + 1; 
+                    int q = Convert.ToInt32(da[0]) - 1;
+                    int p = Convert.ToInt32(da[1]) + 1;
                     string SQL = $"UPDATE  [Menu Items] SET Quantity = {q} WHERE(ItemName = '{(sender as Button).Tag.ToString()}') ";
                     dbConnector.DoSQL(SQL);
                     string SQLSTR = $"UPDATE  [Menu Items] SET Ordered = {p} WHERE(ItemName = '{(sender as Button).Tag.ToString()}') ";
@@ -175,7 +184,7 @@ namespace BrockCafeCW
 
                 dbConnector.Close();
 
-                int OID = 0;
+                OrderID = 0;
                 for (int i = 0; i < lvBasket.Items.Count; i++)
                 {
                     string menID = lvBasket.Items[i].SubItems[3].Text;
@@ -190,23 +199,94 @@ namespace BrockCafeCW
                     dr = dbConnector.DoSQL(sql);
                     while (dr.Read())
                     {
-                        OID = Convert.ToInt32(dr[0]);
+                        OrderID = Convert.ToInt32(dr[0]);
 
                     }
 
-                    string sqlStr = $"INSERT INTO [Order Items] (OrderID, menuItemID, Quantity, price) VALUES ({OID}, {menID}, {quantity}, {price})";
+                    string sqlStr = $"INSERT INTO [Order Items] (OrderID, menuItemID, Quantity, price) VALUES ({OrderID}, {menID}, {quantity}, {price})";
                     dr = dbConnector.DoSQL(sqlStr);
 
                     dbConnector.Close();
 
                 }
-                MessageBox.Show("ORDER" + OID);
-                lvBasket.Items.Clear();
-                txtRunningTotal.Clear();
-                LogOut();
+                DialogResult dialogResult = MessageBox.Show(OrderID + "\n Would you like your receipt", "Order", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    printString();
+                    lvBasket.Items.Clear();
+                    txtRunningTotal.Clear();
+                    LogOut();
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    lvBasket.Items.Clear();
+                    txtRunningTotal.Clear();
+                    LogOut();
+
+                }
             }
 
         }
+
+        private void printString()
+        {
+            header = string.Format("{0,-20}{1,-15}{2,-15}{3,-15}", "Item Name", "Quantity", "Date", "Total Cost") + "\n";
+            printDocument1.PrintPage += PrintDocument1_PrintPage;
+            stringToPrint = GetData();
+            documentContents = stringToPrint;
+            printPreviewDialog1.Document = printDocument1;
+            printPreviewDialog1.ShowDialog();
+
+        }
+        private void PrintDocument1_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            int charactersOnPage = 0;
+            int linesPerPage = 0;
+            Font font = new Font("Courier New", 12.0f);
+            // Sets the value of charactersOnPage to the number of characters 
+            // of stringToPrint that will fit within the bounds of the page.
+            e.Graphics.MeasureString(stringToPrint, font,
+                e.MarginBounds.Size, StringFormat.GenericTypographic,
+                out charactersOnPage, out linesPerPage);
+            // Draws the string within the bounds of the page.
+            e.Graphics.DrawString(stringToPrint, font, Brushes.Black,
+            e.MarginBounds, StringFormat.GenericTypographic);
+            // Remove the portion of the string that has been printed.
+            stringToPrint = stringToPrint.Substring(charactersOnPage);
+            // Check to see if more pages are to be printed.
+            e.HasMorePages = (stringToPrint.Length > 0);
+            // If there are no more pages, reset the string to be printed.
+            if (!e.HasMorePages)
+            {
+                stringToPrint = documentContents;
+            }
+            else
+            {  // print the header as new page
+                stringToPrint = header + stringToPrint;
+            }
+        }
+        private string GetData()
+        {
+          
+            string dataToPrint = "";
+            clsDBConnector dbConnector = new clsDBConnector();
+            OleDbDataReader dr;
+            string sqlStr;
+            DateTime dateofLate;
+            dbConnector.Connect();
+            sqlStr = $"SELECT [Menu Items].ItemName, [Order Items].Quantity, Orders.OrderTime, Orders.TotalCost,  [Order Items].price FROM(([Menu Items] INNER JOIN [Order Items] ON[Menu Items].menuItemID = [Order Items].menuItemID) INNER JOIN Orders ON[Order Items].OrderID = Orders.orderID) WHERE([Order Items].OrderID = {OrderID})";
+            dr = dbConnector.DoSQL(sqlStr);
+            lvBasket.Items.Clear();
+            dataToPrint = header;
+            while (dr.Read())
+            {
+                //ADD THE PRICE COSTS 
+                dateofLate = Convert.ToDateTime(dr[2]);
+                dataToPrint = dataToPrint + string.Format("{0,-30}{1,-5}{2,-15}{3,-10}", dr[0].ToString(), dr[1].ToString(), dateofLate.ToShortDateString(), "£" + dr[3].ToString() + "\n");
+            }
+            return dataToPrint;
+        }
+
 
         private void LogOut()
         {
