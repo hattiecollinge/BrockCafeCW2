@@ -245,7 +245,7 @@ namespace BrockCafeCW
                 total = dr[0].ToString();
             }
             dbConnector.Close();
-            stringToPrint = GetData() + "\n TOTAL: £"total;
+            stringToPrint = GetData() + "\n TOTAL: £" +total;
             documentContents = stringToPrint;
             printPreviewDialog1.Document = printDocument1;
             printPreviewDialog1.ShowDialog();
