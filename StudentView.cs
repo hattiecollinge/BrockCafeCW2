@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Printing;
+using System.Data.Common;
 
 
 namespace BrockCafeCW
@@ -230,9 +231,21 @@ namespace BrockCafeCW
 
         private void printString()
         {
+            clsDBConnector dbConnector = new clsDBConnector();
+            OleDbDataReader dr;
+            dbConnector.Connect();
             header = string.Format("{0,-20}{1,-15}{2,-15}{3,-15}", "Item Name", "Quantity", "Date", "Total Cost") + "\n";
             printDocument1.PrintPage += PrintDocument1_PrintPage;
-            stringToPrint = GetData();
+
+            string sqlStr = $"SELECT TotalCost\r\nFROM     Orders\r\nWHERE  (orderID = {OrderID})";
+            dr = dbConnector.DoSQL(sqlStr);
+            string total = "";
+            while (dr.Read())
+            {
+                total = dr[0].ToString();
+            }
+            dbConnector.Close();
+            stringToPrint = GetData() + "\n TOTAL: £"total;
             documentContents = stringToPrint;
             printPreviewDialog1.Document = printDocument1;
             printPreviewDialog1.ShowDialog();
@@ -267,12 +280,12 @@ namespace BrockCafeCW
         }
         private string GetData()
         {
-          
+
             string dataToPrint = "";
             clsDBConnector dbConnector = new clsDBConnector();
             OleDbDataReader dr;
             string sqlStr;
-            DateTime dateofLate;
+            DateTime date;
             dbConnector.Connect();
             sqlStr = $"SELECT [Menu Items].ItemName, [Order Items].Quantity, Orders.OrderTime, Orders.TotalCost,  [Order Items].price FROM(([Menu Items] INNER JOIN [Order Items] ON[Menu Items].menuItemID = [Order Items].menuItemID) INNER JOIN Orders ON[Order Items].OrderID = Orders.orderID) WHERE([Order Items].OrderID = {OrderID})";
             dr = dbConnector.DoSQL(sqlStr);
@@ -280,9 +293,9 @@ namespace BrockCafeCW
             dataToPrint = header;
             while (dr.Read())
             {
-                //ADD THE PRICE COSTS 
-                dateofLate = Convert.ToDateTime(dr[2]);
-                dataToPrint = dataToPrint + string.Format("{0,-30}{1,-5}{2,-15}{3,-10}", dr[0].ToString(), dr[1].ToString(), dateofLate.ToShortDateString(), "£" + dr[3].ToString() + "\n");
+                
+                date = Convert.ToDateTime(dr[2]);
+                dataToPrint = dataToPrint + string.Format("{0,-30}{1,-5}{2,-15}{3,-10}", dr[0].ToString(), dr[1].ToString(), date.ToShortDateString(), "£" + dr[4].ToString() + "\n");
             }
             return dataToPrint;
         }
